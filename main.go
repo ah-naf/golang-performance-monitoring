@@ -30,6 +30,7 @@ func main() {
 		task.PUT("/:id", routers.EditTask)
 		task.DELETE("/:id", routers.DeleteTask)
 	}
+	router.GET("/health", routers.HealthCheck)
 
 	srv := &http.Server{
 		Addr:    ":8080",
