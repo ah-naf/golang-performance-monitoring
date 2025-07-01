@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"go-metrics-monitoring-system/internals/database"
+	"go-metrics-monitoring-system/internals/routers"
 	"log"
 	"net/http"
 	"os"
@@ -21,6 +22,9 @@ func main() {
 		ctx.String(http.StatusOK, "Golang Metric Monitoring System")
 	})
 
+	task := router.Group("/task")
+	task.POST("", routers.AddNewTask)
+
 	srv := &http.Server{
 		Addr:    ":8080",
 		Handler: router.Handler(),
@@ -38,13 +42,13 @@ func main() {
 
 	log.Println("Shutdown Server ...")
 
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Println("Server Shutdown:", err)
 	}
 
 	<-ctx.Done()
-	log.Println("timeout of 5 seconds.")
+	log.Println("timeout of 1 seconds.")
 	log.Println("Server exiting")
 }
