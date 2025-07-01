@@ -23,7 +23,13 @@ func main() {
 	})
 
 	task := router.Group("/task")
-	task.POST("", routers.AddNewTask)
+	{
+		task.POST("", routers.AddNewTask)
+		task.GET("", routers.GetAllTask)
+		task.GET("/:id", routers.GetTaskWithID)
+		task.PUT("/:id", routers.EditTask)
+		task.DELETE("/:id", routers.DeleteTask)
+	}
 
 	srv := &http.Server{
 		Addr:    ":8080",
