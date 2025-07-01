@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"go-metrics-monitoring-system/internals/database"
+	"go-metrics-monitoring-system/internals/metrics"
 	"go-metrics-monitoring-system/internals/routers"
 	"log"
 	"net/http"
@@ -12,11 +13,15 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func main() {
 	router := gin.Default()
 	database.ConnectDatabase()
+
+	metrics.RunCPUMetrics(10 * time.Second)
 
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "Golang Metric Monitoring System")
@@ -31,6 +36,15 @@ func main() {
 		task.DELETE("/:id", routers.DeleteTask)
 	}
 	router.GET("/health", routers.HealthCheck)
+
+	reg := prometheus.NewRegistry()
+	reg.MustRegister(
+		metrics.ProcessCPUSecondsTotal, metrics.ProcessCPUUsagePercent,
+	)
+
+	router.GET("/metrics", gin.WrapH(
+		promhttp.HandlerFor(reg, promhttp.HandlerOpts{}),
+	))
 
 	srv := &http.Server{
 		Addr:    ":8080",
