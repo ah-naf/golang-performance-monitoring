@@ -2,6 +2,7 @@ package metrics
 
 import (
 	"os"
+	"runtime"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -32,6 +33,16 @@ var (
 		Name:      "threads",
 		Help:      "Number of OS threads in the process",
 	})
+
+	// Distribution of Go GC pause durations (in seconds)
+	GoGCPauseDuration = prometheus.NewHistogram(prometheus.HistogramOpts{
+		Namespace: "myapp",
+		Subsystem: "go_runtime",
+		Name:      "gc_pause_duration_seconds",
+		Help:      "Distribution of Go garbage-collection pause durations in seconds",
+		// e.g. 1µs → 10ms → 100ms → 1s → 10s (tweak as you like)
+		Buckets: prometheus.ExponentialBuckets(1e-6, 10, 7),
+	})
 )
 
 func RunSystemMetrics(interval time.Duration) {
@@ -41,21 +52,36 @@ func RunSystemMetrics(interval time.Duration) {
 	}
 
 	if ms, err := proc.CreateTime(); err == nil {
+		// 1) Process Start time
 		ProcessStartTimeSeconds.Set(float64(ms) / 1000.0)
 	}
+
+	var lastNumGC uint32
 
 	go func() {
 		for {
 
-			// 3) Open FDs
+			// 2) Open FDs
 			if fds, err := proc.NumFDs(); err == nil {
 				ProcessOpenFDs.Set(float64(fds))
 			}
 
-			// 4) Thread count
+			// 3) Thread count
 			if tn, err := proc.NumThreads(); err == nil {
 				ProcessNumThreads.Set(float64(tn))
 			}
+
+			// 4) GC pause durations
+			var mem runtime.MemStats
+			runtime.ReadMemStats(&mem)
+			// mem.NumGC is total # of GCs since program start
+			// for each new GC, observe its pause
+			for i := lastNumGC; i < mem.NumGC; i++ {
+				idx := i % uint32(len(mem.PauseNs))
+				pauseSec := float64(mem.PauseNs[idx]) / 1e9
+				GoGCPauseDuration.Observe(pauseSec)
+			}
+			lastNumGC = mem.NumGC
 
 			time.Sleep(interval)
 		}
