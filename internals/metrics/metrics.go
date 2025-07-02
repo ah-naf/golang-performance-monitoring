@@ -27,5 +27,11 @@ func RegisterAllMetrics(reg *prometheus.Registry) {
 		// Memory metrics
 		ProcessResidentMemoryBytes,
 		ProcessVirtualMemoryBytes,
+
+		// HTTP metrics
+		HTTPRequestsTotal,
+		HTTPRequestDuration,
+		HTTPRequestSizeBytes,
+		HTTPResponseSizeBytes,
 	)
 }

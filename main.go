@@ -23,6 +23,8 @@ func main() {
 
 	metrics.RunMetrics(10 * time.Second)
 
+	router.Use(metrics.MetricsMiddleware())
+
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "Golang Metric Monitoring System")
 	})
