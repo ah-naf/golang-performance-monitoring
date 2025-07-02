@@ -21,7 +21,7 @@ func main() {
 	router := gin.Default()
 	database.ConnectDatabase()
 
-	metrics.RunCPUMetrics(10 * time.Second)
+	metrics.RunMetrics(10 * time.Second)
 
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "Golang Metric Monitoring System")
@@ -38,9 +38,7 @@ func main() {
 	router.GET("/health", routers.HealthCheck)
 
 	reg := prometheus.NewRegistry()
-	reg.MustRegister(
-		metrics.ProcessCPUSecondsTotal, metrics.ProcessCPUUsagePercent,
-	)
+	metrics.RegisterAllMetrics(reg)
 
 	router.GET("/metrics", gin.WrapH(
 		promhttp.HandlerFor(reg, promhttp.HandlerOpts{}),
