@@ -1,0 +1,77 @@
+services:
+  postgres:
+    image: postgres
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-metrics}
+      POSTGRES_USER: ${POSTGRES_USER:-appuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-apppass123}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-appuser} -d ${POSTGRES_DB:-metrics}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  go-app:
+    build:
+      context: ./go-app
+      dockerfile: Dockerfile
+    container_name: go-app
+    environment:
+      HOST: postgres
+      PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-metrics}
+      USER: ${POSTGRES_USER:-appuser}
+      PASSWORD: ${POSTGRES_PASSWORD:-apppass123}
+
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+      - "--storage.tsdb.retention.time=15d"
+    networks:
+      - app_network
+    restart: unless-stopped
+    depends_on:
+      - go-app
+
+volumes:
+  postgres_data:
+    driver: local
+  prometheus_data:
+    driver: local
+
+networks:
+  app_network:
+    driver: bridge
