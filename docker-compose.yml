@@ -67,10 +67,41 @@ services:
     depends_on:
       - go-app
 
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER:  admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP:    "false"
+      # automatically add Prometheus as the default DS
+      GF_DATASOURCES_PROVISIONING_ENABLED:  "true"
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+      # Provision the Prometheus data source
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+
+      # Provision your dashboard JSON
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+
+      # Dashboard provider config
+      - ./grafana/provisioning/dashboard_providers:/etc/grafana/provisioning/dashboard_providers:ro
+
+    networks:
+      - app_network
+    restart: unless-stopped
+
 volumes:
   postgres_data:
     driver: local
   prometheus_data:
+    driver: local
+  grafana_data:
     driver: local
 
 networks:

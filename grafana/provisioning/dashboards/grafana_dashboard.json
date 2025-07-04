@@ -1,0 +1,245 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 0 },
+      "id": 1,
+      "options": { "legend": { "show": true } },
+      "targets": [
+        {
+          "expr": "rate(myapp_process_cpu_seconds_total[5m])",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "CPU Seconds Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 75 },
+              { "color": "red", "value": 90 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 0 },
+      "id": 2,
+      "options": {
+        "reduceOptions": { "calcs": ["last"], "fields": "" },
+        "orientation": "auto"
+      },
+      "targets": [
+        {
+          "expr": "myapp_process_cpu_usage_percent",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "CPU Usage %",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 8 },
+      "id": 3,
+      "options": { "legend": { "show": true } },
+      "targets": [
+        {
+          "expr": "myapp_process_resident_memory_bytes",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Resident Memory (bytes)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 8 },
+      "id": 4,
+      "options": { "legend": { "show": true } },
+      "targets": [
+        {
+          "expr": "myapp_process_virtual_memory_bytes",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Virtual Memory (bytes)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 3, "x": 0, "y": 16 },
+      "id": 5,
+      "options": { "reduceOptions": { "calcs": ["last"], "fields": "" } },
+      "targets": [
+        { "expr": "time() - myapp_process_start_time_seconds", "refId": "A" }
+      ],
+      "title": "Process Uptime",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 3, "x": 3, "y": 16 },
+      "id": 6,
+      "options": { "reduceOptions": { "calcs": ["last"], "fields": "" } },
+      "targets": [{ "expr": "myapp_process_open_fds", "refId": "A" }],
+      "title": "Open File Descriptors",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 3, "x": 6, "y": 16 },
+      "id": 7,
+      "options": { "reduceOptions": { "calcs": ["last"], "fields": "" } },
+      "targets": [{ "expr": "myapp_process_threads", "refId": "A" }],
+      "title": "Thread Count",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 3, "x": 9, "y": 16 },
+      "id": 8,
+      "options": { "legend": { "show": true } },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(myapp_go_runtime_gc_pause_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p95",
+          "refId": "A"
+        }
+      ],
+      "title": "GC Pause p95 (s)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 24 },
+      "id": 9,
+      "options": { "legend": { "show": true } },
+      "targets": [
+        {
+          "expr": "rate(myapp_http_requests_total[1m])",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "HTTP Request Rate (rps)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 24 },
+      "id": 10,
+      "options": { "legend": { "show": true } },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(myapp_http_request_duration_seconds_bucket[5m])) by (le, endpoint))",
+          "legendFormat": "{{endpoint}}",
+          "refId": "A"
+        }
+      ],
+      "title": "HTTP Request Duration p95 (s)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 32 },
+      "id": 11,
+      "options": { "legend": { "show": true } },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(myapp_http_request_size_bytes_bucket[5m])) by (le))",
+          "legendFormat": "p95",
+          "refId": "A"
+        }
+      ],
+      "title": "HTTP Request Size p95 (bytes)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 32 },
+      "id": 12,
+      "options": { "legend": { "show": true } },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(myapp_http_response_size_bytes_bucket[5m])) by (le))",
+          "legendFormat": "p95",
+          "refId": "A"
+        }
+      ],
+      "title": "HTTP Response Size p95 (bytes)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 95 },
+              { "color": "green", "value": 99 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 40 },
+      "id": 13,
+      "options": {
+        "reduceOptions": { "calcs": ["last"], "fields": "" },
+        "orientation": "auto"
+      },
+      "targets": [
+        {
+          "expr": "(1 - sum(rate(myapp_http_requests_total{status_code=~\"5..\"}[1m])) / sum(rate(myapp_http_requests_total[1m]))) * 100",
+          "refId": "A"
+        }
+      ],
+      "title": "Availability %",
+      "type": "stat"
+    }
+  ],
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": { "list": [] },
+  "time": { "from": "now-1h", "to": "now" },
+  "timezone": "browser",
+  "title": "MyApp Monitoring Dashboard",
+  "version": 1
+}
