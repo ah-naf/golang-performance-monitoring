@@ -4,12 +4,13 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
+  "refresh": "5s",
   "links": [],
   "panels": [
     {
       "datasource": "Prometheus",
       "fieldConfig": { "defaults": {}, "overrides": [] },
-      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 0 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
       "id": 1,
       "options": { "legend": { "show": true } },
       "targets": [
@@ -40,7 +41,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 0 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
       "id": 2,
       "options": {
         "reduceOptions": { "calcs": ["last"], "fields": "" },
@@ -59,7 +60,7 @@
     {
       "datasource": "Prometheus",
       "fieldConfig": { "defaults": {}, "overrides": [] },
-      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 8 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
       "id": 3,
       "options": { "legend": { "show": true } },
       "targets": [
@@ -75,7 +76,7 @@
     {
       "datasource": "Prometheus",
       "fieldConfig": { "defaults": {}, "overrides": [] },
-      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 8 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
       "id": 4,
       "options": { "legend": { "show": true } },
       "targets": [
@@ -91,7 +92,7 @@
     {
       "datasource": "Prometheus",
       "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
-      "gridPos": { "h": 8, "w": 3, "x": 0, "y": 16 },
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 16 },
       "id": 5,
       "options": { "reduceOptions": { "calcs": ["last"], "fields": "" } },
       "targets": [
@@ -103,7 +104,7 @@
     {
       "datasource": "Prometheus",
       "fieldConfig": { "defaults": {}, "overrides": [] },
-      "gridPos": { "h": 8, "w": 3, "x": 3, "y": 16 },
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 16 },
       "id": 6,
       "options": { "reduceOptions": { "calcs": ["last"], "fields": "" } },
       "targets": [{ "expr": "myapp_process_open_fds", "refId": "A" }],
@@ -113,7 +114,7 @@
     {
       "datasource": "Prometheus",
       "fieldConfig": { "defaults": {}, "overrides": [] },
-      "gridPos": { "h": 8, "w": 3, "x": 6, "y": 16 },
+      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 16 },
       "id": 7,
       "options": { "reduceOptions": { "calcs": ["last"], "fields": "" } },
       "targets": [{ "expr": "myapp_process_threads", "refId": "A" }],
@@ -123,7 +124,7 @@
     {
       "datasource": "Prometheus",
       "fieldConfig": { "defaults": {}, "overrides": [] },
-      "gridPos": { "h": 8, "w": 3, "x": 9, "y": 16 },
+      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 16 },
       "id": 8,
       "options": { "legend": { "show": true } },
       "targets": [
@@ -139,15 +140,11 @@
     {
       "datasource": "Prometheus",
       "fieldConfig": { "defaults": {}, "overrides": [] },
-      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 24 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 },
       "id": 9,
       "options": { "legend": { "show": true } },
       "targets": [
-        {
-          "expr": "rate(myapp_http_requests_total[1m])",
-          "legendFormat": "",
-          "refId": "A"
-        }
+        { "expr": "rate(myapp_http_requests_total[1m])", "refId": "A" }
       ],
       "title": "HTTP Request Rate (rps)",
       "type": "timeseries"
@@ -155,7 +152,7 @@
     {
       "datasource": "Prometheus",
       "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
-      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 24 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 },
       "id": 10,
       "options": { "legend": { "show": true } },
       "targets": [
@@ -171,7 +168,7 @@
     {
       "datasource": "Prometheus",
       "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
-      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 32 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 32 },
       "id": 11,
       "options": { "legend": { "show": true } },
       "targets": [
@@ -187,7 +184,7 @@
     {
       "datasource": "Prometheus",
       "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
-      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 32 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 32 },
       "id": 12,
       "options": { "legend": { "show": true } },
       "targets": [
@@ -218,7 +215,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 40 },
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 40 },
       "id": 13,
       "options": {
         "reduceOptions": { "calcs": ["last"], "fields": "" },
@@ -232,6 +229,38 @@
       ],
       "title": "Availability %",
       "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 48 },
+      "id": 14,
+      "options": { "legend": { "show": true } },
+      "targets": [
+        {
+          "expr": "sum(increase(myapp_http_requests_total[5m])) by (endpoint)",
+          "legendFormat": "{{endpoint}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Requests per Route (last 5m)",
+      "type": "bargauge"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 48 },
+      "id": 15,
+      "options": { "legend": { "show": true } },
+      "targets": [
+        {
+          "expr": "sum(increase(myapp_http_requests_total[5m])) by (status_code)",
+          "legendFormat": "{{status_code}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Requests by Status Code (last 5m)",
+      "type": "bargauge"
     }
   ],
   "schemaVersion": 36,
